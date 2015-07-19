@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
-namespace GistsVSIX
+namespace Microsoft.VisualStudio.Extensions.Gists
 {
     [DataContract]
     class GistPost

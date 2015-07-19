@@ -18,7 +18,9 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.IO;
 
-namespace GistsVSIX
+using Microsoft.VisualStudio.Extensions.Gists.Interop;
+
+namespace Microsoft.VisualStudio.Extensions.Gists
 {
     /// <summary>
     /// Command handler
@@ -129,35 +131,15 @@ namespace GistsVSIX
             string title = "CreateGist";
 
             string gistFilename = "myGist.cs";
-            string gistCode = GetCurrentlySelectedText();
+            string gistCode = "sample code goes here"; // GetCurrentlySelectedText();
             string gistDescription = "FAKE DESCRIPTION FOR NOW";
             bool gistIsPublic = true;
 
             string responseString = "<>";
 
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://api.github.com/");
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("GistForVisualStudio/1.0");
-
-                string json = "{ \n" +
-                                 "\"description\": \"" + gistDescription + "\",\n" +
-                                 "\"public\": " + gistIsPublic.ToString().ToLower() + ",\n" +
-                                 "\"files\": {\n" +
-                                    "\"" + gistFilename + "\": {" + "\n" +
-                                       "\"content\": \"" + "sample code goes here" + "\" " + "\n" +
-                                    "}" + "\n" +
-                                 "}" + "\n" +
-                              "}";
-
-                StringContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-                var response = await client.PostAsync("/gists", content);
-                responseString = await response.Content.ReadAsStringAsync();
-            }
-
+            var service = new GistsService();
+            responseString = (await service.PostNewGistAsync(gistCode, gistDescription, gistFilename, gistIsPublic)).ToString();
+            
             // Show a message box to prove we were here
             VsShellUtilities.ShowMessageBox(
                 this.ServiceProvider,
