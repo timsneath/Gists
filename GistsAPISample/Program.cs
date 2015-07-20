@@ -9,19 +9,44 @@ namespace Microsoft.VisualStudio.Extensions.Gists
 {
     class Program
     {
+        
         public static void Main(string[] args)
         {
             Task.Run(async () =>
             {
-                var service = new GistsService();
-                var gists = await service.GetGistsAsync();
+                await PostGist();
+                await GetGists();
 
-                //Console.WriteLine("There were " + gists.Count + " entries returned.");
-                //Console.WriteLine();
+            }).Wait();
+            Console.ReadLine();
+        }
+
+        private static async Task PostGist()
+        {
+            Console.WriteLine("Post Gist Test");
+            using (var service = new GistsService())
+            {
+                var gists = await service.PostNewGistAsync("here is a sample code snippet " + Guid.NewGuid().ToString(), "description " + Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), true);
+            }
+        }
+
+        private static async Task GetGists()
+        {
+            Console.WriteLine("Get Gists Test");
+
+            using (var service = new GistsService())
+            {
+                var gists = await service.GetGistsAsync("timsneath");
+
+                Console.WriteLine("There were " + gists.Count + " entries returned.");
+                Console.WriteLine();
                 Console.WriteLine("GistsService response: ");
 
-                Console.WriteLine(gists.ToString());
-            }).Wait();
-        }   
+                foreach (var gist in gists)
+                {
+                    Console.WriteLine(gist["description"]);
+                }
+            }
+        }
     }
 }

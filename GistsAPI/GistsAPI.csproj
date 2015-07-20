@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="GistClient.cs" />
     <Compile Include="GistsService.cs" />
-    <Compile Include="GistPost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
