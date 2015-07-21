@@ -9,7 +9,6 @@ namespace Microsoft.VisualStudio.Extensions.Gists
 {
     class Program
     {
-        
         public static void Main(string[] args)
         {
             Task.Run(async () =>
@@ -26,7 +25,9 @@ namespace Microsoft.VisualStudio.Extensions.Gists
             Console.WriteLine("Post Gist Test");
             using (var service = new GistsService())
             {
-                var gists = await service.PostNewGistAsync("here is a sample code snippet " + Guid.NewGuid().ToString(), "description " + Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), true);
+                var uri = await service.PostNewGistAsync("here is a sample code snippet " + Guid.NewGuid().ToString(), "description " + Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), true);
+                Console.WriteLine("Gist posted at " + uri.ToString());
+                Console.WriteLine();
             }
         }
 

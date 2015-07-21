@@ -51,7 +51,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         {
             if (package == null)
             {
-                throw new ArgumentNullException("package");
+                throw new ArgumentNullException(nameof(package));
             }
 
             this.package = package;
@@ -77,13 +77,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IServiceProvider ServiceProvider
-        {
-            get
-            {
-                return this.package;
-            }
-        }
+        private IServiceProvider ServiceProvider => this.package;
 
         /// <summary>
         /// Initializes the singleton instance of the command.
@@ -94,9 +88,8 @@ namespace Microsoft.VisualStudio.Extensions.Gists
             Instance = new CreateGist(package);
         }
 
-        private string GetCurrentlySelectedText()
+        private string GetSelectedTextInEditor()
         {
-
             var textManager = this.ServiceProvider.GetService(typeof(SVsTextManager)) as IVsTextManager;
             IVsTextView textView = null;
             int mustHaveFocus = 1;
@@ -128,22 +121,21 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         private async void MenuItemCallback(object sender, EventArgs e)
         {
             string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "CreateGist";
+            string title = "Create GitHub Gist";
 
             string gistFilename = "myGist.cs";
-            string gistCode = "sample code goes here"; // GetCurrentlySelectedText();
+            string gistCode = GetSelectedTextInEditor();
             string gistDescription = "FAKE DESCRIPTION FOR NOW";
             bool gistIsPublic = true;
 
-            string responseString = "<>";
+            string responseString = "";
 
             var service = new GistsService();
             responseString = (await service.PostNewGistAsync(gistCode, gistDescription, gistFilename, gistIsPublic)).ToString();
             
-            // Show a message box to prove we were here
             VsShellUtilities.ShowMessageBox(
                 this.ServiceProvider,
-                responseString,
+                "New Gist created at " + responseString,
                 title,
                 OLEMSGICON.OLEMSGICON_INFO,
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,

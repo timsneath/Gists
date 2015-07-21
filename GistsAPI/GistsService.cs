@@ -36,12 +36,17 @@ namespace Microsoft.VisualStudio.Extensions.Gists.Interop
             return response;
         }
 
-        public async Task<JArray> GetGistsAsync()
-        {
-            return await GetGistsAsync("public");
-        }
+        public async Task<JArray> GetGistsAsync() => await GetGistsAsync("public");
 
-        public async Task<JObject> PostNewGistAsync(string codeSnippet, string description, string filename, bool isPublic = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="codeSnippet"></param>
+        /// <param name="description"></param>
+        /// <param name="filename"></param>
+        /// <param name="isPublic"></param>
+        /// <returns>If successful, a string containing the URL to the newly-created Gist.</returns>
+        public async Task<Uri> PostNewGistAsync(string codeSnippet, string description, string filename, bool isPublic = true)
         {
             JObject json = new JObject {
                 { "description", description },
@@ -53,8 +58,9 @@ namespace Microsoft.VisualStudio.Extensions.Gists.Interop
             var content = new StringContent(json.ToString(), System.Text.Encoding.UTF8, "application/json");
             var responseMessage = await httpClient.PostAsync("/gists", content);
             var responseContent = await responseMessage.Content.ReadAsStringAsync();
+            var response = JObject.Parse(responseContent);
 
-            return JObject.Parse(responseContent);
+            return new Uri(response["html_url"].ToString());
         }
 
         public void Dispose()
