@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GistClient.cs" />
+    <Compile Include="GistHttpClient.cs" />
     <Compile Include="GistsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
