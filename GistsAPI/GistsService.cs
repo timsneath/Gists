@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace Microsoft.VisualStudio.Extensions.Gists.Interop
 {
@@ -52,7 +52,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists.Interop
                 { "description", description },
                 { "public", isPublic },
                 { "files", new JObject {
-                    { "filename", new JObject {
+                    { filename, new JObject {
                         { "content", codeSnippet } } } } } };
 
             var content = new StringContent(json.ToString(), System.Text.Encoding.UTF8, "application/json");

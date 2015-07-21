@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.VisualStudio.Extensions.Gists.Interop;
+using System;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Extensions.Gists.Interop;
 
 namespace Microsoft.VisualStudio.Extensions.Gists
 {

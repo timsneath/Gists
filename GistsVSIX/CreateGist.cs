@@ -4,21 +4,16 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System;
-using System.ComponentModel.Design;
-using System.Globalization;
-using System.Net.Http;
+using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.Extensions.Gists.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Editor;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+using Microsoft.VisualStudio.TextManager.Interop;
+using System;
+using System.ComponentModel.Design;
 using System.IO;
-
-using Microsoft.VisualStudio.Extensions.Gists.Interop;
 
 namespace Microsoft.VisualStudio.Extensions.Gists
 {
@@ -88,7 +83,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
             Instance = new CreateGist(package);
         }
 
-        private string GetSelectedTextInEditor()
+        private string GetTextFromEditor(bool selectedTextOnly = true)
         {
             var textManager = this.ServiceProvider.GetService(typeof(SVsTextManager)) as IVsTextManager;
             IVsTextView textView = null;
@@ -107,7 +102,14 @@ namespace Microsoft.VisualStudio.Extensions.Gists
                 object holder;
                 userData.GetData(ref guidViewHost, out holder);
                 IWpfTextViewHost viewHost = (IWpfTextViewHost)holder;
-                return viewHost.TextView.Selection.SelectedSpans[0].GetText();
+                if (selectedTextOnly)
+                {
+                    return viewHost.TextView.Selection.SelectedSpans[0].GetText();
+                }
+                else
+                {
+                    return viewHost.TextView.TextSnapshot.GetText();
+                }
             }
         }
 
@@ -120,14 +122,18 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         /// <param name="e">Event args.</param>
         private async void MenuItemCallback(object sender, EventArgs e)
         {
+            var currentFilename = GetCurrentFilenameFromEditor();
+
             var dialog = new PublishGistDialog();
+            dialog.Filename = Path.GetFileName(currentFilename);
+
             var result = dialog.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
+            if (result == true)
             {
-                var selectedCode = GetSelectedTextInEditor();
+                var codeToPublish = GetTextFromEditor(dialog.PublishOnlySelection);
 
                 var service = new GistsService();
-                var uri = await service.PostNewGistAsync(selectedCode, dialog.Description, dialog.Filename, dialog.IsPublic);
+                var uri = await service.PostNewGistAsync(codeToPublish, dialog.Description, dialog.Filename, dialog.IsPublic);
 
                 VsShellUtilities.ShowMessageBox(
                     this.ServiceProvider,
@@ -136,6 +142,32 @@ namespace Microsoft.VisualStudio.Extensions.Gists
                     OLEMSGICON.OLEMSGICON_INFO,
                     OLEMSGBUTTON.OLEMSGBUTTON_OK,
                     OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            }
+        }
+
+        private string GetCurrentFilenameFromEditor()
+        {
+            var textManager = this.ServiceProvider.GetService(typeof(SVsTextManager)) as IVsTextManager;
+            IVsTextView textView = null;
+            int mustHaveFocus = 1;
+            textManager.GetActiveView(mustHaveFocus, null, out textView);
+
+            var userData = textView as IVsUserData;
+            if (userData == null)
+            {
+                // no text view is currently open
+                return String.Empty;
+            }
+            else
+            {
+                Guid guidViewHost = DefGuidList.guidIWpfTextViewHost;
+                object holder;
+                userData.GetData(ref guidViewHost, out holder);
+                IWpfTextViewHost viewHost = (IWpfTextViewHost)holder;
+
+                ITextDocument doc;
+                viewHost.TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out doc);
+                return doc.FilePath;
             }
         }
     }
