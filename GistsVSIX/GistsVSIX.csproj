@@ -53,6 +53,12 @@
   <ItemGroup>
     <Compile Include="CreateGist.cs" />
     <Compile Include="CreateGistPackage.cs" />
+    <Compile Include="PublishGistDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PublishGistDialog.Designer.cs">
+      <DependentUpon>PublishGistDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +195,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="PublishGistDialog.resx">
+      <DependentUpon>PublishGistDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>

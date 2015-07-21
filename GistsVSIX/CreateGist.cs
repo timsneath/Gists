@@ -120,26 +120,23 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         /// <param name="e">Event args.</param>
         private async void MenuItemCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "Create GitHub Gist";
+            var dialog = new PublishGistDialog();
+            var result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                var selectedCode = GetSelectedTextInEditor();
 
-            string gistFilename = "myGist.cs";
-            string gistCode = GetSelectedTextInEditor();
-            string gistDescription = "FAKE DESCRIPTION FOR NOW";
-            bool gistIsPublic = true;
+                var service = new GistsService();
+                var uri = await service.PostNewGistAsync(selectedCode, dialog.Description, dialog.Filename, dialog.IsPublic);
 
-            string responseString = "";
-
-            var service = new GistsService();
-            responseString = (await service.PostNewGistAsync(gistCode, gistDescription, gistFilename, gistIsPublic)).ToString();
-            
-            VsShellUtilities.ShowMessageBox(
-                this.ServiceProvider,
-                "New Gist created at " + responseString,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                VsShellUtilities.ShowMessageBox(
+                    this.ServiceProvider,
+                    "New Gist created at " + uri.ToString(),
+                    "Publish GitHub Gist",
+                    OLEMSGICON.OLEMSGICON_INFO,
+                    OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            }
         }
     }
 }
