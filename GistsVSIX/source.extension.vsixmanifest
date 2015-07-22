@@ -2,8 +2,9 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="GistsVSIX.Tim Sneath.7dbae67e-514a-4340-81ed-4f08054c7881" Version="1.0" Language="en-US" Publisher="Tim Sneath" />
-    <DisplayName>Gists</DisplayName>
-    <Description xml:space="preserve">Enables you to create a Gist in GitHub.</Description>
+    <DisplayName>Gists for Visual Studio</DisplayName>
+    <Description xml:space="preserve">Simple extension to enable you to publish a Gist in GitHub.</Description>
+    <License>LICENSE</License>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
