@@ -124,24 +124,21 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         {
             var currentFilename = GetCurrentFilenameFromEditor();
 
-            var dialog = new PublishGistDialog();
-            dialog.Filename = Path.GetFileName(currentFilename);
+            var publishDialog = new PublishGistDialog();
+            publishDialog.Filename = Path.GetFileName(currentFilename);
 
-            var result = dialog.ShowDialog();
+            var result = publishDialog.ShowDialog();
             if (result == true)
             {
-                var codeToPublish = GetTextFromEditor(dialog.PublishOnlySelection);
+                var codeToPublish = GetTextFromEditor(publishDialog.PublishOnlySelection);
 
                 var service = new GistsService();
-                var uri = await service.PostNewGistAsync(codeToPublish, dialog.Description, dialog.Filename, dialog.IsPublic);
+                var uri = await service.PostNewGistAsync(codeToPublish, publishDialog.Description, publishDialog.Filename, publishDialog.IsPublic);
 
-                VsShellUtilities.ShowMessageBox(
-                    this.ServiceProvider,
-                    "New Gist created at " + uri.ToString(),
-                    "Publish GitHub Gist",
-                    OLEMSGICON.OLEMSGICON_INFO,
-                    OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                var successDialog = new SuccessDialog();
+                successDialog.Hyperlink = uri;
+
+                successDialog.ShowDialog();
             }
         }
 
