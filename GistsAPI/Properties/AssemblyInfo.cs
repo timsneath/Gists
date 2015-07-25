@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GistsAPI")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Simple interop layer for GitHub Gists")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Tim Sneath")]
 [assembly: AssemblyProduct("GistsAPI")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright © 2015 Tim Sneath")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
