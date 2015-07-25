@@ -5,7 +5,6 @@
 //------------------------------------------------------------------------------
 
 using Microsoft.VisualStudio.Editor;
-using Microsoft.VisualStudio.Extensions.Gists.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
@@ -83,6 +82,47 @@ namespace Microsoft.VisualStudio.Extensions.Gists
             Instance = new CreateGist(package);
         }
 
+
+        private IWpfTextViewHost GetCurrentViewHost()
+        {
+            var textManager = this.ServiceProvider.GetService(typeof(SVsTextManager)) as IVsTextManager;
+
+            IVsTextView textView = null;
+            int mustHaveFocus = 1;
+            textManager.GetActiveView(mustHaveFocus, null, out textView);
+
+            var userData = textView as IVsUserData;
+            if (userData == null)
+            {
+                return null;
+            }
+            else
+            {
+                Guid guidViewHost = DefGuidList.guidIWpfTextViewHost;
+                object holder;
+                userData.GetData(ref guidViewHost, out holder);
+                var viewHost = (IWpfTextViewHost)holder;
+
+                return viewHost;
+
+            }
+        }
+
+        private string GetSelectedTextFromEditor(IWpfTextViewHost viewHost) =>
+            viewHost.TextView.Selection.SelectedSpans[0].GetText();
+
+        private string GetAllTextFromEditor(IWpfTextViewHost viewHost) =>
+            viewHost.TextView.TextSnapshot.GetText();
+
+        private string GetCurrentFilename(IWpfTextViewHost viewHost)
+        {
+            ITextDocument doc;
+            viewHost.TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out doc);
+
+            return doc.FilePath;
+        }
+
+
         private string GetTextFromEditor(bool selectedTextOnly = true)
         {
             var textManager = this.ServiceProvider.GetService(typeof(SVsTextManager)) as IVsTextManager;
@@ -122,23 +162,45 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         /// <param name="e">Event args.</param>
         private async void MenuItemCallback(object sender, EventArgs e)
         {
-            var currentFilename = GetCurrentFilenameFromEditor();
+            var gistClient = new GistsApi.GistClient(Properties.Settings.Default.ClientID,
+                                                     Properties.Settings.Default.ClientSecret,
+                                                     "GistsForVisualStudio/1.0");
 
-            var publishDialog = new PublishGistDialog();
-            publishDialog.Filename = Path.GetFileName(currentFilename);
-
-            var result = publishDialog.ShowDialog();
-            if (result == true)
+            var authDialog = new AuthDialog();
+            authDialog.webBrowser.Navigate(gistClient.AuthorizeUrl);
+            authDialog.ShowDialog();
+            if (authDialog.DialogResult == true)
             {
-                var codeToPublish = GetTextFromEditor(publishDialog.PublishOnlySelection);
+                await gistClient.Authorize(authDialog.authCode);
 
-                var service = new GistsService();
-                var uri = await service.PostNewGistAsync(codeToPublish, publishDialog.Description, publishDialog.Filename, publishDialog.IsPublic);
+                var viewHost = GetCurrentViewHost();
+                var filename = Path.GetFileName(GetCurrentFilename(viewHost));
 
-                var successDialog = new SuccessDialog();
-                successDialog.Hyperlink = uri;
+                var publishDialog = new PublishGistDialog();
+                publishDialog.Filename = Path.GetFileName(filename);
 
-                successDialog.ShowDialog();
+                if (publishDialog.ShowDialog() == true)
+                {
+                    string codeToPublish;
+                    if (publishDialog.PublishOnlySelection)
+                    {
+                        codeToPublish = GetSelectedTextFromEditor(viewHost);
+                    }
+                    else
+                    {
+                        codeToPublish = GetAllTextFromEditor(viewHost);
+                    }
+
+
+                    var gistFiles = new[] { Tuple.Create(filename, codeToPublish) };
+
+                    var result = await gistClient.CreateAGist(publishDialog.Description, publishDialog.IsPublic, gistFiles);
+
+                    var successDialog = new SuccessDialog();
+                    successDialog.Hyperlink = new Uri(result.html_url);
+
+                    successDialog.ShowDialog();
+                }
             }
         }
 

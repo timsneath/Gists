@@ -11,7 +11,7 @@
         <TextBox x:Name="FilenameTextBox" HorizontalAlignment="Left" Height="23" Margin="82,18,0,0" TextWrapping="Wrap" Text="gist.cs" VerticalAlignment="Top" Width="200"/>
         <Label x:Name="DescriptionLabel" Content="Description:" Margin="10,46,0,0" Width="72" VerticalAlignment="Top" HorizontalAlignment="Left" />
         <TextBox x:Name="DescriptionTextBox" HorizontalAlignment="Left" Height="116" Margin="82,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" ToolTip="A short description of the gist file that can be associated with the item." SpellCheck.IsEnabled="True"/>
-        <CheckBox x:Name="IsPublicCheckBox" Margin="85,209,0,0" IsChecked="True" Height="23" Content="Gist is public" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96" IsEnabled="False"/>
+        <CheckBox x:Name="IsPublicCheckBox" Margin="85,209,0,0" IsChecked="True" Height="23" Content="Gist is public" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96" />
         <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="207,237,0,0" IsCancel="True"/>
         <Button x:Name="OKButton" Content="OK" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="127,237,0,0" IsDefault="True" Click="OKButton_Click"/>
         <Label x:Name="CodeToIncludeLabel" Content="Add to Gist:" Margin="10,169,0,0" Width="72" VerticalAlignment="Top" HorizontalAlignment="Left" />
