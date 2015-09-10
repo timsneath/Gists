@@ -5,6 +5,7 @@
     <DisplayName>Gists for Visual Studio</DisplayName>
     <Description xml:space="preserve">Simple extension to enable you to publish a Gist in GitHub.</Description>
     <License>LICENSE</License>
+    <Icon>Resources\CreateGist.png</Icon>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
