@@ -122,37 +122,6 @@ namespace Microsoft.VisualStudio.Extensions.Gists
             return doc.FilePath;
         }
 
-
-        private string GetTextFromEditor(bool selectedTextOnly = true)
-        {
-            var textManager = this.ServiceProvider.GetService(typeof(SVsTextManager)) as IVsTextManager;
-            IVsTextView textView = null;
-            int mustHaveFocus = 1;
-            textManager.GetActiveView(mustHaveFocus, null, out textView);
-
-            var userData = textView as IVsUserData;
-            if (userData == null)
-            {
-                // no text view is currently open
-                return String.Empty;
-            }
-            else
-            {
-                Guid guidViewHost = DefGuidList.guidIWpfTextViewHost;
-                object holder;
-                userData.GetData(ref guidViewHost, out holder);
-                IWpfTextViewHost viewHost = (IWpfTextViewHost)holder;
-                if (selectedTextOnly)
-                {
-                    return viewHost.TextView.Selection.SelectedSpans[0].GetText();
-                }
-                else
-                {
-                    return viewHost.TextView.TextSnapshot.GetText();
-                }
-            }
-        }
-
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
         /// See the constructor to see how the menu item is associated with this function using
