@@ -9,7 +9,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.VisualStudio.Extensions.Gists
+namespace Microsoft.VisualStudio.Extensions.Clipper
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -33,6 +33,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(CreateGistPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideToolWindow(typeof(Microsoft.VisualStudio.Extensions.Gists.PastebinToolWindow))]
     public sealed class CreateGistPackage : Package
     {
         /// <summary>
@@ -61,6 +62,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         {
             CreateGist.Initialize(this);
             base.Initialize();
+            Microsoft.VisualStudio.Extensions.Gists.PastebinToolWindowCommand.Initialize(this);
         }
 
         #endregion

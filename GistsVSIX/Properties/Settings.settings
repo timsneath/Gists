@@ -8,5 +8,8 @@
     <Setting Name="ClientSecret" Type="System.String" Scope="User">
       <Value Profile="(Default)">f86bea3471892d295b7637a449299ac38d613049</Value>
     </Setting>
+    <Setting Name="PastebinDeveloperKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">f9b52e691a6bc37a1026e1509d5e3cd8</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

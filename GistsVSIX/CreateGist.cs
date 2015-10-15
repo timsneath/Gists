@@ -14,7 +14,7 @@ using System;
 using System.ComponentModel.Design;
 using System.IO;
 
-namespace Microsoft.VisualStudio.Extensions.Gists
+namespace Microsoft.VisualStudio.Extensions.Clipper
 {
     /// <summary>
     /// Command handler

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.VisualStudio.Extensions.Gists.Properties {
+namespace Microsoft.VisualStudio.Extensions.Clipper.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -44,6 +44,18 @@ namespace Microsoft.VisualStudio.Extensions.Gists.Properties {
             }
             set {
                 this["ClientSecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("f9b52e691a6bc37a1026e1509d5e3cd8")]
+        public string PastebinDeveloperKey {
+            get {
+                return ((string)(this["PastebinDeveloperKey"]));
+            }
+            set {
+                this["PastebinDeveloperKey"] = value;
             }
         }
     }

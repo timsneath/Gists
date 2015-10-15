@@ -1,9 +1,9 @@
-﻿<Window x:Class="Microsoft.VisualStudio.Extensions.Gists.SuccessDialog"
+﻿<Window x:Class="Microsoft.VisualStudio.Extensions.Clipper.SuccessDialog"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Microsoft.VisualStudio.Extensions.Gists"
+             xmlns:local="clr-namespace:Microsoft.VisualStudio.Extensions.Clipper"
              mc:Ignorable="d"
             Title="GitHub Gist Published" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="ThreeDBorderWindow" Height="148.49" Width="384.564" >
     <Grid>

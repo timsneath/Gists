@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Microsoft.VisualStudio.Extensions.Gists
+namespace Microsoft.VisualStudio.Extensions.Clipper
 {
     /// <summary>
     /// Interaction logic for PublishGistDialog.xaml
