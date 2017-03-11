@@ -42,15 +42,9 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         /// <param name="package">Owner package, not null.</param>
         private CreateGist(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException(nameof(package));
-            }
+            this.package = package ?? throw new ArgumentNullException(nameof(package));
 
-            this.package = package;
-
-            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            if (this.ServiceProvider.GetService(typeof(IMenuCommandService)) is OleMenuCommandService commandService)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
                 var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
@@ -86,9 +80,8 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         {
             var textManager = this.ServiceProvider.GetService(typeof(SVsTextManager)) as IVsTextManager;
 
-            IVsTextView textView = null;
             int mustHaveFocus = 1;
-            textManager.GetActiveView(mustHaveFocus, null, out textView);
+            textManager.GetActiveView(mustHaveFocus, null, out IVsTextView textView);
 
             var userData = textView as IVsUserData;
             if (userData == null)
@@ -98,8 +91,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
             else
             {
                 Guid guidViewHost = DefGuidList.guidIWpfTextViewHost;
-                object holder;
-                userData.GetData(ref guidViewHost, out holder);
+                userData.GetData(ref guidViewHost, out object holder);
                 var viewHost = (IWpfTextViewHost)holder;
 
                 return viewHost;
@@ -115,8 +107,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
 
         private string GetCurrentFilename(IWpfTextViewHost viewHost)
         {
-            ITextDocument doc;
-            viewHost.TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out doc);
+            viewHost.TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out ITextDocument doc);
 
             return doc.FilePath;
         }
@@ -144,9 +135,10 @@ namespace Microsoft.VisualStudio.Extensions.Gists
                 var viewHost = GetCurrentViewHost();
                 var filename = Path.GetFileName(GetCurrentFilename(viewHost));
 
-                var publishDialog = new PublishGistDialog();
-                publishDialog.Filename = Path.GetFileName(filename);
-
+                var publishDialog = new PublishGistDialog()
+                {
+                    Filename = Path.GetFileName(filename)
+                };
                 if (publishDialog.ShowDialog() == true)
                 {
                     string codeToPublish;
@@ -164,9 +156,10 @@ namespace Microsoft.VisualStudio.Extensions.Gists
 
                     var result = await gistClient.CreateAGist(publishDialog.Description, publishDialog.IsPublic, gistFiles);
 
-                    var successDialog = new SuccessDialog();
-                    successDialog.Hyperlink = new Uri(result.html_url);
-
+                    var successDialog = new SuccessDialog()
+                    {
+                        Hyperlink = new Uri(result.html_url)
+                    };
                     successDialog.ShowDialog();
                 }
             }
@@ -175,9 +168,8 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         private string GetCurrentFilenameFromEditor()
         {
             var textManager = this.ServiceProvider.GetService(typeof(SVsTextManager)) as IVsTextManager;
-            IVsTextView textView = null;
             int mustHaveFocus = 1;
-            textManager.GetActiveView(mustHaveFocus, null, out textView);
+            textManager.GetActiveView(mustHaveFocus, null, out IVsTextView textView);
 
             var userData = textView as IVsUserData;
             if (userData == null)
@@ -188,12 +180,10 @@ namespace Microsoft.VisualStudio.Extensions.Gists
             else
             {
                 Guid guidViewHost = DefGuidList.guidIWpfTextViewHost;
-                object holder;
-                userData.GetData(ref guidViewHost, out holder);
+                userData.GetData(ref guidViewHost, out object holder);
                 IWpfTextViewHost viewHost = (IWpfTextViewHost)holder;
 
-                ITextDocument doc;
-                viewHost.TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out doc);
+                viewHost.TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out ITextDocument doc);
                 return doc.FilePath;
             }
         }
