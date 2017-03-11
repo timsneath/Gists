@@ -123,7 +123,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         {
             var gistClient = new GistsApi.GistClient(Properties.APIKeys.GistClientID,
                                                      Properties.APIKeys.GistClientSecret,
-                                                     "GistsForVisualStudio/1.1");
+                                                     "GistsForVisualStudio/1.0");
 
             var authDialog = new AuthDialog();
             authDialog.webBrowser.Navigate(gistClient.AuthorizeUrl);
