@@ -121,9 +121,9 @@ namespace Microsoft.VisualStudio.Extensions.Gists
         /// <param name="e">Event args.</param>
         private async void MenuItemCallback(object sender, EventArgs e)
         {
-            var gistClient = new GistsApi.GistClient(Properties.Settings.Default.ClientID,
-                                                     Properties.Settings.Default.ClientSecret,
-                                                     "GistsForVisualStudio/1.0");
+            var gistClient = new GistsApi.GistClient(Properties.APIKeys.GistClientID,
+                                                     Properties.APIKeys.GistClientSecret,
+                                                     "GistsForVisualStudio/1.1");
 
             var authDialog = new AuthDialog();
             authDialog.webBrowser.Navigate(gistClient.AuthorizeUrl);
