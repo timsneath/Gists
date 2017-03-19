@@ -3,7 +3,7 @@
   <Metadata>
     <Identity Id="GistsVSIX.Tim Sneath.7dbae67e-514a-4340-81ed-4f08054c7881" Version="1.1" Language="en-US" Publisher="Tim Sneath" />
     <DisplayName>Gists for Visual Studio</DisplayName>
-    <Description xml:space="preserve">Simple extension to enable you to publish a Gist in GitHub.</Description>
+    <Description xml:space="preserve">Create a GitHub Gist from a selection or file in your Visual Studio project.</Description>
     <License>LICENSE</License>
     <Icon>Resources\CreateGist.png</Icon>
   </Metadata>
