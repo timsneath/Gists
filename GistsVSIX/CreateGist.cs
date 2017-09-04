@@ -151,6 +151,7 @@ namespace Microsoft.VisualStudio.Extensions.Gists
                         codeToPublish = GetAllTextFromEditor(viewHost);
                     }
 
+                    filename = publishDialog.Filename;
 
                     var gistFiles = new[] { Tuple.Create(filename, codeToPublish) };
 
